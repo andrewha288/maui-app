@@ -1,0 +1,36 @@
+﻿@page "/counter"
+@using Extron.Data
+@inject MembershipService MembershipService
+
+<h1>Purchase Membership</h1>
+
+@foreach(IMembership membership in listing)
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@membership.GetMembershipType()</h5>
+            <p class="card-text">
+                <div>
+                    <b>Cost: </b> $ @membership.GetPremium()
+                </div>
+                <div>
+                    <b>Tow Millage: </b> @membership.GetTowDistance() miles
+                </div>
+            </p>
+            <button class="btn btn-primary" @onclick="() => addMember(membership)" >Buy</button>
+        </div>
+    </div>
+}
+
+
+@code {
+    IEnumerable<IMembership> listing;
+    protected override async Task OnInitializedAsync()
+    {
+        listing = MembershipService.GetAllMembershipTypes();
+    }
+    void addMember(IMembership member)
+    {
+        MembershipService.AddMember("Andrew", member);
+    }
+}

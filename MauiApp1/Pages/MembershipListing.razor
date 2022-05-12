@@ -1,0 +1,46 @@
+﻿@page "/fetchdata"
+
+@using Extron.Data
+@inject MembershipService MembershipService
+
+<h1>Membership Listings</h1>
+
+<p>Shows all the members that have bought membership</p>
+
+@if (listings == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Membership Type</th>
+				<th>Premium</th>
+				<th>Tow Milage</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var member in listings)
+			{
+				<tr>
+					<td>@member.Name</td>
+					<td>@member.GetMembershipType()</td>
+					<td>@member.GetPremium()</td>
+					<td>@member.GetTowDistance()</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+@code {
+	IEnumerable<IMembership> listings;
+	//	When the page initizlize we grab the members from our service
+	protected override async Task OnInitializedAsync()
+	{
+		listings = MembershipService.GetMembers();
+	}
+}
